@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandelbrot Set</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main">
+
+        <div class="Mandelbrot">
+            <h1 class="main heading">Mandelbrot Set: Without workers</h1>
+
+            <p>What is Mandlebrotset? <span><button class="answer">answer</button></span></p>
+    
+            <p class="answer-para"></p>
+        </div>
+
+        <div id="container">
+            <div class="input">
+                <label for="maxIterationsInput">Max Iterations:</label>
+                <input type="number" id="maxIterationsInput" value="100" >
+                <span class="tooltip" title="The maximum number of iterations for the Mandelbrot calculation. Higher values may produce more detailed images but take longer to render.">?
+                    
+                </span>
+                <label for="zoomInput">Zoom:</label>
+                <input type="number" id="zoomInput" value="300">
+                <span class="tooltip" title="The zoom level for the Mandelbrot Set. Higher values zoom in closer to the fractal.">?</span>
+            </div>
+            <button id="generateButton" onclick=updateMandelbrot()>Generate Mandelbrot Set</button>
+            <canvas id="mandelbrotCanvas"></canvas>
+            <span id="elapsedTime">Elapsed Time: 0 ms</span>
+            <button id="toggleButton" class="toggle-button">What Does This Prove?</button>
+            <div id="additionalContent" class="toggle-content">
+                <p>Comparing performance between using a web worker and not using one when generating the Mandelbrot Set can be useful for several reasons:</p>
+                <ul>
+                    <li>Heavy Computation: Generating the Mandelbrot Set involves heavy computational tasks, 
+                        especially when rendering high-resolution images or exploring deep zoom levels. 
+                        Offloading this computation to a web worker can prevent the main UI thread from being blocked, 
+                        ensuring a smooth user experience.</li>
+                    <li>Parallel Processing: The Mandelbrot Set calculation is highly parallelizable. 
+                        By utilizing web workers, you can divide the computation across multiple threads, 
+                        taking advantage of multi-core processors and potentially reducing the overall time required 
+                        to generate the fractal.</li>
+                        <p> This proves that Web workers can <em> significantly </em> increase your performance and greatly increase 
+                            user experience</p>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('mandelbrotCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const width = canvas.width = window.innerWidth;
+        const height = canvas.height = window.innerHeight;
+
+        let maxIterations = 100;
+        let zoom = 300;
+        const offsetX = -width / 2;
+        const offsetY = -height / 2;
+
+        function mandelbrot(c_real, c_imaginary) {
+            let z_real = 0;
+            let z_imaginary = 0;
+            for (let i = 0; i < maxIterations; i++) {
+                const z_real_temp = z_real * z_real - z_imaginary * z_imaginary + c_real;
+                const z_imaginary_temp = 2 * z_real * z_imaginary + c_imaginary;
+                z_real = z_real_temp;
+                z_imaginary = z_imaginary_temp;
+                if (z_real * z_real + z_imaginary * z_imaginary > 4) {
+                    return i;
+                }
+            }
+            return maxIterations;
+        }
+
+        function drawMandelbrot() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas before drawing
+            const startTime = performance.now();
+            for (let x = 0; x < width; x++) {
+                for (let y = 0; y < height; y++) {
+                    const c_real = (x + offsetX) / zoom;
+                    const c_imaginary = (y + offsetY) / zoom;
+                    const iterations = mandelbrot(c_real, c_imaginary);
+                    const brightness = iterations / maxIterations * 255;
+                    const color = `rgb(${brightness}, ${brightness}, ${brightness})`;
+                    ctx.fillStyle = color;
+                    ctx.fillRect(x, y, 1, 1);
+                }
+            }
+            const endTime = performance.now();
+            const elapsedTime = endTime - startTime;
+            document.getElementById('elapsedTime').textContent = `Elapsed Time: ${elapsedTime.toFixed(2)} ms`;
+        }
+
+        document.getElementById('generateButton').addEventListener('click', function() {
+            drawMandelbrot();
+        });
+
+        // Toggle button functionality
+        const toggleButton = document.getElementById('toggleButton');
+        const additionalContent = document.getElementById('additionalContent');
+
+        toggleButton.addEventListener('click', function() {
+            additionalContent.classList.toggle('active')
+        });
+
+        const answer = document.querySelector('.answer');
+
+
+//answer button
+const main = document.querySelector('.Mandelbrot');
+const answered = document.querySelector('.answer-para');
+answered.textContent = "The Mandelbrot set is the set of complex numbers 'c' for which the function f(z) = z^2 + c does not diverge when iterated from z = 0. In other words, the Mandelbrot set is the set of points in the complex plane that remain bounded under repeated iterations of the function. The boundary of the Mandelbrot set is a fractal shape with intricate and beautiful patterns, making it a popular subject for mathematical exploration and visualization.";
+answered.style.display = 'none';  // Hide it initially
+main.appendChild(answered);
+
+answer.addEventListener('click', function() {
+    if (answered.style.display === 'none') {
+        answered.style.display = 'block';
+        answered.style.fontSize = '0.8rem';
+        answer.textContent = 'close';
+    } else {
+        answered.style.display = 'none';
+        answer.textContent = 'answer';
+    }
+});
+
+
+        
+
+        // Function to update parameters and redraw Mandelbrot Set
+        function updateMandelbrot() {
+            maxIterations = parseInt(document.getElementById('maxIterationsInput').value);
+            zoom = parseInt(document.getElementById('zoomInput').value);
+            drawMandelbrot();
+        }
+
+    </script>
+</body>
+</html>
+

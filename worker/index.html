@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandelbrot Set</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main">
+        <div class="Mandelbrot">
+            <h1 class="main heading">Mandelbrot Set: With Workers</h1>
+            <p>What is Mandelbrot set? <span><button class="answer">answer</button></span></p>
+            <p class="answer-para"></p>
+        </div>
+
+        <div id="container">
+            <div class="input">
+                <label for="maxIterationsInput">Max Iterations:</label>
+                <input type="number" id="maxIterationsInput" value="100">
+                <span class="tooltip" title="The maximum number of iterations for the Mandelbrot calculation. Higher values may produce more detailed images but take longer to render.">?</span>
+                <label for="zoomInput">Zoom:</label>
+                <input type="number" id="zoomInput" value="300">
+                <span class="tooltip" title="The zoom level for the Mandelbrot Set. Higher values zoom in closer to the fractal.">?</span>
+            </div>
+            <button id="generateButton">Generate Mandelbrot Set</button>
+            <canvas id="mandelbrotCanvas"></canvas>
+            <span id="elapsedTime">Elapsed Time: 0 ms</span>
+            <button id="toggleButton" class="toggle-button">What Does This Prove?</button>
+            <div id="additionalContent" class="toggle-content">
+                <p>Comparing performance between using a web worker and not using one when generating the Mandelbrot Set can be useful for several reasons:</p>
+                <ul>
+                    <li>Heavy Computation: Generating the Mandelbrot Set involves heavy computational tasks, especially when rendering high-resolution images or exploring deep zoom levels. Offloading this computation to a web worker can prevent the main UI thread from being blocked, ensuring a smooth user experience.</li>
+                    <li>Parallel Processing: The Mandelbrot Set calculation is highly parallelizable. By utilizing web workers, you can divide the computation across multiple threads, taking advantage of multi-core processors and potentially reducing the overall time required to generate the fractal.</li>
+                    <p> This proves that Web workers can <em> significantly </em> increase your performance and greatly increase 
+                        user experience</p>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
