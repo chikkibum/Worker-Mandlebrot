@@ -20,12 +20,12 @@
         <div id="container">
             <div class="input">
                 <label for="maxIterationsInput">Max Iterations:</label>
-                <input type="number" id="maxIterationsInput" value="100" >
-                <span class="tooltip" title="The maximum number of iterations for the Mandelbrot calculation. Higher values may produce more detailed images but take longer to render.">?
-                    
-                </span>
+                <input type="range" id="maxIterationsInput" value="100" min="1" max="1000">
+                <span id="maxIterationsValue">100</span>
+                <span class="tooltip" title="The maximum number of iterations for the Mandelbrot calculation. Higher values may produce more detailed images but take longer to render.">?</span>
                 <label for="zoomInput">Zoom:</label>
-                <input type="number" id="zoomInput" value="300">
+                <input type="range" id="zoomInput" value="300" min="1" max="250">
+                <span id="zoomValue">300</span>
                 <span class="tooltip" title="The zoom level for the Mandelbrot Set. Higher values zoom in closer to the fractal.">?</span>
             </div>
             <button id="generateButton" onclick=updateMandelbrot()>Generate Mandelbrot Set</button>
@@ -102,16 +102,24 @@
 
         // Toggle button functionality
         const toggleButton = document.getElementById('toggleButton');
-        const additionalContent = document.getElementById('additionalContent');
+const additionalContent = document.getElementById('additionalContent');
 
-        toggleButton.addEventListener('click', function() {
-            additionalContent.classList.toggle('active')
-        });
+toggleButton.addEventListener('click', function() {
+    if (toggleButton.textContent === 'What Does This Prove?') {
+        additionalContent.classList.toggle('active');
+        toggleButton.textContent = 'close';
+    }
+    else {
+        additionalContent.classList.toggle('active');
+        toggleButton.textContent = 'What Does This Prove?';
+    }
 
-        const answer = document.querySelector('.answer');
+
+});
 
 
 //answer button
+const answer = document.querySelector('.answer');
 const main = document.querySelector('.Mandelbrot');
 const answered = document.querySelector('.answer-para');
 answered.textContent = "The Mandelbrot set is the set of complex numbers 'c' for which the function f(z) = z^2 + c does not diverge when iterated from z = 0. In other words, the Mandelbrot set is the set of points in the complex plane that remain bounded under repeated iterations of the function. The boundary of the Mandelbrot set is a fractal shape with intricate and beautiful patterns, making it a popular subject for mathematical exploration and visualization.";
@@ -130,6 +138,7 @@ answer.addEventListener('click', function() {
 });
 
 
+
         
 
         // Function to update parameters and redraw Mandelbrot Set
@@ -138,7 +147,14 @@ answer.addEventListener('click', function() {
             zoom = parseInt(document.getElementById('zoomInput').value);
             drawMandelbrot();
         }
+        document.getElementById('maxIterationsInput').addEventListener('input', function() {
+    document.getElementById('maxIterationsValue').textContent = this.value;
+});
 
+// Update zoom value display
+document.getElementById('zoomInput').addEventListener('input', function() {
+    document.getElementById('zoomValue').textContent = this.value;
+});
     </script>
 </body>
 </html>

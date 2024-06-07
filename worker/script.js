@@ -37,7 +37,16 @@ const toggleButton = document.getElementById('toggleButton');
 const additionalContent = document.getElementById('additionalContent');
 
 toggleButton.addEventListener('click', function() {
-    additionalContent.classList.toggle('active');
+    if (toggleButton.textContent === 'What Does This Prove?') {
+        additionalContent.classList.toggle('active');
+        toggleButton.textContent = 'close';
+    }
+    else {
+        additionalContent.classList.toggle('active');
+        toggleButton.textContent = 'What Does This Prove?';
+    }
+
+
 });
 
 // Answer button functionality
@@ -65,3 +74,13 @@ function updateMandelbrot() {
     zoom = parseInt(document.getElementById('zoomInput').value);
     drawMandelbrot();
 }
+
+// Update maxIterations value display
+document.getElementById('maxIterationsInput').addEventListener('input', function() {
+    document.getElementById('maxIterationsValue').textContent = this.value;
+});
+
+// Update zoom value display
+document.getElementById('zoomInput').addEventListener('input', function() {
+    document.getElementById('zoomValue').textContent = this.value;
+});
